@@ -1,0 +1,26 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_newList"
+        android:title="רשימה חדשה.."
+        android:orderInCategory="100"
+        android:showAsAction="never" />
+    <item android:id="@+id/menu_renameList"
+        android:title="שנה שם.."
+        android:orderInCategory="100"
+        android:showAsAction="never" />
+   <item android:id="@+id/menu_saveAsList"
+        android:title="שמור עותק חדש בשם.."
+        android:orderInCategory="100"
+        android:showAsAction="never" />
+    <item android:id="@+id/menu_chooseList"
+        android:title="החלף רשימה.."
+        android:orderInCategory="100"
+        android:showAsAction="never" />
+    <item android:id="@+id/menu_clearList"
+        android:title="הסר מוצרים שנקנו"
+        android:orderInCategory="100"
+        android:showAsAction="never" />
+    <item android:id="@+id/menu_removeList"
+        android:title="מחק רשימה"
+        android:orderInCategory="100"
+        android:showAsAction="never" />
+</menu>

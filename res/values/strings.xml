@@ -1,0 +1,11 @@
+<resources>
+
+    <string name="app_name">Super Shopping List</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">רשימת קניות</string>
+    <string name="title_activity_do_shopping">קונים</string>
+    <string name="product_desc">פירוט</string>
+    <string name="product_add">הוסף מוצר</string>
+    <string name="what_more">צריך גם...</string>
+
+</resources>

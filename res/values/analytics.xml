@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<resources>
+  <!--Replace placeholder ID with your tracking ID-->
+  <string name="ga_trackingId">UA-38260461-1</string>
+
+  <!--Enable Activity tracking-->
+  <bool name="ga_autoActivityTracking">true</bool>
+  
+  <!--  set the dispatch period -->
+  <integer name="ga_dispatchPeriod">5</integer>
+
+  <!-- The screen names that will appear in your reporting -->
+  <string name="il.ac.shenkar.shoppinglist.activities.ShoppingListMainActivity">Camera Share Menu</string>
+  <string name="il.ac.shenkar.shoppinglist.activities.DoShoppingActivity">Shipping info</string>
+  
+  <!--Enable automatic exception tracking-->
+  <bool name="ga_reportUncaughtExceptions">true</bool>
+</resources>
