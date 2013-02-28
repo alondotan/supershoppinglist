@@ -49,21 +49,26 @@ public class ShoppingListMainActivity extends Activity {
     	
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_shopping_list);
+
+        // ga tracker
         EasyTracker.getInstance().setContext(getApplicationContext());
         tracker = EasyTracker.getTracker();
                 
         shoppingList = ShoppingListRepository.getInstance(this);
 
-        
+        // add current list name to the display
         currentNameTextView = (TextView) findViewById(R.id.currentListNameText);
         currentNameTextView.setText(shoppingList.getCurrentShoppingListName());
-        // get predefined products list to the dropdown menu
+
+        // get predefined products list to the drop down menu
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_dropdown_item_1line,shoppingList.getAllPredefinedProductsNames());
         
         AutoCompleteTextView textView = (AutoCompleteTextView)
                 findViewById(R.id.editTextName);
         textView.setAdapter(adapter);
+
+        // set the enter key to save to product 
         textView.setOnEditorActionListener(
                 new AutoCompleteTextView.OnEditorActionListener() {
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -78,7 +83,7 @@ public class ShoppingListMainActivity extends Activity {
                     }
                 });
 
-        
+        // handle the product list
         lv1 = (ListView) findViewById(R.id.listV_main);
         lv1.setAdapter(new ItemListBaseAdapter(this));
         
@@ -88,6 +93,8 @@ public class ShoppingListMainActivity extends Activity {
 	public void onResume() {
         super.onResume();
         shoppingList = ShoppingListRepository.getInstance(this);
+
+        // reset the display
         final ListView lv1 = (ListView) findViewById(R.id.listV_main);
     	EditText nameText = (EditText) findViewById(R.id.editTextName);
     	nameText.setText("");
@@ -98,12 +105,15 @@ public class ShoppingListMainActivity extends Activity {
         lv1.setAdapter(new ItemListBaseAdapter(this));
     }
     
+
+    // handle adding new product
     public void addNewProduct(View view) {
     	Product p = new Product();
     	EditText nameText = (EditText) findViewById(R.id.editTextName);
     	if (!nameText.getText().toString().isEmpty()){
 	    	p.setName(nameText.getText().toString());
 	    	shoppingList.addProduct(p);
+	    	// reset the product name field
 	    	nameText.setText("");
 	    	
 	        final ListView lv1 = (ListView) findViewById(R.id.listV_main);    	
@@ -113,6 +123,7 @@ public class ShoppingListMainActivity extends Activity {
     	
     }
     
+    // share the list
     public void share(View view) {
 		tracker.trackEvent("Shopping List Home page", "product_was_shared", "",null);
 		Intent share = new Intent(Intent.ACTION_SEND);
@@ -125,6 +136,7 @@ public class ShoppingListMainActivity extends Activity {
 		startActivity(Intent.createChooser(share, "איך תרצה לשתף את רשימת: " + shoppingList.getCurrentShoppingListName()));
     }
     
+    // move the the do shopping activity
     public void goShopping(View view) {
 		tracker.trackEvent("Shopping List Home page", "went_to_shopping", "",null);
     	Intent intent = new Intent(this, DoShoppingActivity.class);    	
@@ -166,24 +178,16 @@ public class ShoppingListMainActivity extends Activity {
     @Override
     public void onStart() {
       super.onStart();
-      EasyTracker.getInstance().activityStart(this); // Add this method.
+      EasyTracker.getInstance().activityStart(this); 
     }
 
     @Override
     public void onStop() {
       super.onStop();
-      EasyTracker.getInstance().activityStop(this); // Add this method.
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_MENU)) {
-            Log.d(this.getClass().getName(), "back button pressed");
-        }
-        return super.onKeyDown(keyCode, event);
+      EasyTracker.getInstance().activityStop(this);
     }
     
-  //Menu
+    //Menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 	    MenuInflater inflater = getMenuInflater();
@@ -191,17 +195,20 @@ public class ShoppingListMainActivity extends Activity {
 	    return true;
 	}
     
+    // Handle item selection in the menu
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
     	AlertDialog.Builder alertDialogBuilder;
     	LayoutInflater l_Inflater;
     	View newNameView;
     	EditText newNameText;
     	AlertDialog alertDialog;
+
+		tracker.trackEvent("Shopping List Home page", "menu_was_opened", "",null);
     	
     	switch (item.getItemId()) {
-            case R.id.menu_newList:
+    		// adding new list
+            case R.id.menu_newList: 
     			alertDialogBuilder = new AlertDialog.Builder(this);
     			l_Inflater = LayoutInflater.from(this);
     			newNameView = l_Inflater.inflate(R.layout.change_list_name, null);
@@ -211,6 +218,7 @@ public class ShoppingListMainActivity extends Activity {
                 	   Dialog d = (Dialog) dialog;
                 	   EditText newNameText = (EditText) d.findViewById(R.id.newName);
                 	   shoppingList.newList(newNameText.getText().toString());
+                	   tracker.trackEvent("Shopping List Home page", "new_list_was_added", "",null);
                 	   refreshDisplay();
                    }
                })
@@ -220,10 +228,10 @@ public class ShoppingListMainActivity extends Activity {
                    }
                });      
     			alertDialog = alertDialogBuilder.create();
-    	//			tracker.trackEvent("Order Summary", "no paypal clicked", "",null);
     			alertDialog.show();
                 return true;
                 
+        	// rename the list
             case R.id.menu_renameList:
     			alertDialogBuilder = new AlertDialog.Builder(this);
     			l_Inflater = LayoutInflater.from(this);
@@ -236,6 +244,7 @@ public class ShoppingListMainActivity extends Activity {
                 	   Dialog d = (Dialog) dialog;
                 	   EditText newNameText = (EditText) d.findViewById(R.id.newName);
                 	   shoppingList.updateCurrentListName(newNameText.getText().toString());
+                	   tracker.trackEvent("Shopping List Home page", "list_renamed", "",null);
                 	   refreshDisplay();
                    }
                })
@@ -245,10 +254,10 @@ public class ShoppingListMainActivity extends Activity {
                    }
                });      
     			alertDialog = alertDialogBuilder.create();
-    	//			tracker.trackEvent("Order Summary", "no paypal clicked", "",null);
     			alertDialog.show();
                 return true;
                 
+            // choose other list
             case R.id.menu_chooseList:
             	ArrayList<String> list = shoppingList.getAllShoppingListNames();
             	final CharSequence[] items = new CharSequence[list.size()];
@@ -261,12 +270,15 @@ public class ShoppingListMainActivity extends Activity {
             	alertDialogBuilder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                     	shoppingList.replaceCurrentList(items[item].toString());
+                		tracker.trackEvent("Shopping List Home page", "change_current_list", "",null);
                     	refreshDisplay();
                     }
                 });
             	alertDialog = alertDialogBuilder.create();
             	alertDialog.show();
-                return true;       
+                return true;    
+                
+            // create new list base on the current one
             case R.id.menu_saveAsList:
     			alertDialogBuilder = new AlertDialog.Builder(this);
     			l_Inflater = LayoutInflater.from(this);
@@ -277,6 +289,7 @@ public class ShoppingListMainActivity extends Activity {
                 	   Dialog d = (Dialog) dialog;
                 	   EditText newNameText = (EditText) d.findViewById(R.id.newName);
                 	   shoppingList.saveAsCurrentList(newNameText.getText().toString());
+                	   tracker.trackEvent("Shopping List Home page", "list_saved_as", "",null);
                 	   refreshDisplay();
                    }
                })
@@ -286,22 +299,25 @@ public class ShoppingListMainActivity extends Activity {
                    }
                });      
     			alertDialog = alertDialogBuilder.create();
-    	//			tracker.trackEvent("Order Summary", "no paypal clicked", "",null);
     			alertDialog.show();
                 return true;
+                
+            // remove from the list all the products mark as done
             case R.id.menu_clearList:
             	shoppingList.clearCurrentShoppingList();
     	        lv1 = (ListView) findViewById(R.id.listV_main);    	
     	        lv1.setAdapter(new ItemListBaseAdapter(this));
-    	        
+    			tracker.trackEvent("Shopping List Home page", "list_was_cleared", "",null);    	        
                 return true;          
+                
+            // removeing the list
             case R.id.menu_removeList:
             	shoppingList.removeCurrentList();
                 currentNameTextView = (TextView) findViewById(R.id.currentListNameText);
                 currentNameTextView.setText(shoppingList.getCurrentShoppingListName());
     	        lv1 = (ListView) findViewById(R.id.listV_main);    	
     	        lv1.setAdapter(new ItemListBaseAdapter(this));
-
+    			tracker.trackEvent("Shopping List Home page", "list_was_removed", "",null);
                 return true;          
             default:
                 return super.onOptionsItemSelected(item);

@@ -5,16 +5,13 @@ import il.ac.shenkar.superShoppinglist.beans.Product;
 import il.ac.shenkar.superShoppinglist.beans.ShoppingList;
 import il.ac.shenkar.superShoppinglist.utils.PredefinedDataHandler;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 	 
@@ -46,7 +43,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String LIST_KEY_ID = "listId";
     private static final String LIST_KEY_NAME = "name";
     private static final String LIST_LOCATION = "location";
-    private static final String LIST_UPDATE_TIME = "updateTime";
       
 
     public DatabaseHandler(Context context) {
@@ -79,8 +75,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String CREATE_LISTS_TABLE = "CREATE TABLE " + TABLE_LISTS + "("
                 + LIST_KEY_ID      + " INTEGER PRIMARY KEY," 
         		+ LIST_KEY_NAME    + " TEXT,"
-                + LIST_LOCATION    + " TEXT,"
-                + LIST_UPDATE_TIME + " TEXT" +")";
+                + LIST_LOCATION    + " TEXT" +")";
         db.execSQL(CREATE_LISTS_TABLE);
         
         // init the DB
@@ -211,7 +206,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         	shoppingList.setName(cursor.getString(1));
         	shoppingList.setLocation(cursor.getString(2));
         	
-        	Log.d("DatabaseHandler","list: "+cursor.getString(1));
     		ArrayList<Category> categoryList = getListCategories(listId,db);
     		shoppingList.setCategoriesList(categoryList);
         }
@@ -299,7 +293,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         
         ContentValues  values = new ContentValues ();
 	    values.put(LIST_KEY_NAME, listName); // list Name
-	 //   values.put(LIST_UPDATE_TIME, dateFormat.format(date)); // list Name
 	    db.insert(TABLE_LISTS, null, values);
 	    
 	    String selectQuery = "SELECT  * FROM " + TABLE_LISTS + " WHERE " + LIST_KEY_NAME + " = '" + listName +"'";              
@@ -350,7 +343,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public int saveAsShoppingList(int originListId,String newListName){
         int newListId = addShoppingList(newListName);
         
-        String selectQuery = "SELECT  * FROM " + TABLE_LISTS + " WHERE " + LIST_KEY_ID + " = " + originListId ;              
+        String selectQuery = "SELECT  * FROM " + TABLE_PRODUCTS + " WHERE " + LIST_KEY_ID + " = " + originListId ;              
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);     
         ArrayList<Product> productsList = new ArrayList<Product>();
@@ -383,12 +376,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     
     
     public void initPredefindList(SQLiteDatabase db) {
-    	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
-    	Date date = new Date();
         ContentValues  values = new ContentValues ();
 	    values.put(LIST_KEY_NAME, "רשימה חדשה שלי"); // list Name
 	    values.put(LIST_LOCATION, ""); // list Name
-	 //   values.put(LIST_UPDATE_TIME, dateFormat.format(date)); // list Name
 	    db.insert(TABLE_LISTS, null, values);       	
     }
 

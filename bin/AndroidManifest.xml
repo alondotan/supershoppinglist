@@ -28,21 +28,7 @@
             android:label="@string/title_activity_do_shopping" 
             android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
-        <receiver android:name="il.ac.shenkar.superShoppinglist.utils.ReminderBroadCastReceiver">	
-			<intent-filter>	
-				<action android:name="il.ac.shenkar.superShoppinglist.utils.reminder_broadcast"/>	
-			</intent-filter>	
-		</receiver>
-		        <receiver android:name="il.ac.shenkar.superShoppinglist.utils.ShoppingListWidgetProvider" >
-            <intent-filter >
-                <action 
-                    android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_info" />
-        </receiver>
+        
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

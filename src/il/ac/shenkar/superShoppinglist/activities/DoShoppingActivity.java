@@ -75,16 +75,19 @@ public class DoShoppingActivity extends Activity
         }
 
         
+        // set current list name and current page in the display
+        TextView listName = (TextView) findViewById(R.id.currentListNameText);
+        listName.setText(shoppingList.getCurrentShoppingListName());
         TextView name = (TextView) findViewById(R.id.pageNumberText);
         name.setText(1 + "/" +  shoppingList.getCategoriesNumber());
         
-        TextView listName = (TextView) findViewById(R.id.currentListNameText);
-        listName.setText(shoppingList.getCurrentShoppingListName());
-        
+
+        // handle categories pager adapter
         categoriesAdapter = new CategoriesPagerAdapter(this);
         categoriesPager = (ViewPager) findViewById(R.id.categoriespager);
         categoriesPager.setAdapter(categoriesAdapter);
         
+        // had listener for changing pages
         mPageChangeListener = new OnPageChangeListener() {
 
             public void onPageScrollStateChanged(int arg0) {
@@ -120,8 +123,8 @@ public class DoShoppingActivity extends Activity
     		categoriesPager.setCurrentItem( currPage-2,true);
     }	
     public void backToEdit(View view) {
-    	if (!startedFromReminder)
-    		finish();
+    	if (!startedFromReminder) 
+    		finish(); // go back to main activity
     	else
     	{
         	Intent intent = new Intent(this, ShoppingListMainActivity.class);    	

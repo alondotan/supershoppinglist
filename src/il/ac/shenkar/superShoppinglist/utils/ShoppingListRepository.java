@@ -37,6 +37,7 @@ public class ShoppingListRepository {
 		db = new DatabaseHandler(context);
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 		
+        // check for last updated list
 		SharedPreferences pref = context.getSharedPreferences("ssl Session Data", 0);
 		String lastSavedListName = pref.getString("last saved list", "");
 		if (lastSavedListName.isEmpty())
@@ -95,6 +96,7 @@ public class ShoppingListRepository {
 		return currentShoppingList.getCategory(i);
 	}
 	
+	// for the mixed (category and products) list
 	public Object getObject(int i){
 		return currentShoppingList.indexToProduct(i);
 	}
